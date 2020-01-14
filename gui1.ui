@@ -90,7 +90,7 @@ background-color: #c0ffb3;
         <string>CopyAssist</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_3">
-        <item row="0" column="0">
+        <item row="2" column="0">
          <widget class="QLabel" name="label">
           <property name="styleSheet">
            <string notr="true">font: 20pt &quot;Times New Roman&quot;;
@@ -103,34 +103,14 @@ background-color: #c0ffb3;
           </property>
          </widget>
         </item>
-        <item row="0" column="1">
+        <item row="2" column="1">
          <widget class="QLineEdit" name="columnNumber">
           <property name="styleSheet">
            <string notr="true"> background-color: #e1f5fe;</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="2">
-         <widget class="QPushButton" name="pushButton_start">
-          <property name="styleSheet">
-           <string notr="true">background-color: #52de97;</string>
-          </property>
-          <property name="text">
-           <string>Start</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="3">
-         <widget class="QPushButton" name="pushButton_stop">
-          <property name="styleSheet">
-           <string notr="true">background-color: #52de97;</string>
-          </property>
-          <property name="text">
-           <string>Stop</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0" colspan="4">
+        <item row="4" column="0" colspan="4">
          <widget class="QTableWidget" name="tableWidget">
           <property name="styleSheet">
            <string notr="true"> background-color: #e1f5fe;</string>
@@ -343,17 +323,17 @@ background-color: #c0ffb3;
           <column/>
          </widget>
         </item>
-        <item row="2" column="0" colspan="4">
-         <widget class="QPushButton" name="pushButton">
+        <item row="2" column="2">
+         <widget class="QPushButton" name="pushButton_start">
           <property name="styleSheet">
            <string notr="true">background-color: #52de97;</string>
           </property>
           <property name="text">
-           <string>Generate Output</string>
+           <string>Start</string>
           </property>
          </widget>
         </item>
-        <item row="3" column="0" colspan="4">
+        <item row="6" column="0" colspan="4">
          <widget class="QLabel" name="label_2">
           <property name="styleSheet">
            <string notr="true">color:  #ff5d6c;</string>
@@ -363,6 +343,49 @@ background-color: #c0ffb3;
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="0" colspan="4">
+         <widget class="QPushButton" name="pushButton">
+          <property name="styleSheet">
+           <string notr="true">background-color: #52de97;</string>
+          </property>
+          <property name="text">
+           <string>Generate Output</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QLineEdit" name="rowNumber">
+          <property name="styleSheet">
+           <string notr="true"> background-color: #e1f5fe;</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_3">
+          <property name="styleSheet">
+           <string notr="true">font: 20pt &quot;Times New Roman&quot;;
+color:  #0C3B40;
+background-color: #c0ffb3;
+</string>
+          </property>
+          <property name="text">
+           <string>Row Number</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="2">
+         <widget class="QPushButton" name="pushButton_stop">
+          <property name="styleSheet">
+           <string notr="true">background-color: #52de97;</string>
+          </property>
+          <property name="text">
+           <string>Stop</string>
           </property>
          </widget>
         </item>
