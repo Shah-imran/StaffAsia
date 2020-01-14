@@ -8,10 +8,10 @@ import threading
 
 
 class MyGui(Ui_MainWindow, QtWidgets.QWidget):
-    def __init__(self, dialog):
+    def __init__(self, mainWindow):
         Ui_MainWindow.__init__(self)
         QtWidgets.QWidget.__init__(self)
-        self.setupUi(dialog)
+        self.setupUi(mainWindow)
 
 
 class myMainClass():
@@ -23,7 +23,7 @@ class myMainClass():
 if __name__ == '__main__':
 
     app = QtWidgets.QApplication(sys.argv)
-    dialog = QtWidgets.QDialog()
+    mainWindow = QtWidgets.QMainWindow()
 
     try:
         def resource_path(relative_path):
@@ -32,20 +32,20 @@ if __name__ == '__main__':
             return os.path.join(os.path.abspath("."), relative_path)
 
         p = resource_path('favicon.ico')
-        dialog.setWindowIcon(QtGui.QIcon(p))
+        mainWindow.setWindowIcon(QtGui.QIcon(p))
     except Exception as e:
         print(e)
         pass
 
-    dialog.setWindowFlags(dialog.windowFlags() |
+    mainWindow.setWindowFlags(mainWindow.windowFlags() |
                           QtCore.Qt.WindowMinimizeButtonHint |
                           QtCore.Qt.WindowSystemMenuHint)
-    dialog.setWindowFlags(dialog.windowFlags() |
+    mainWindow.setWindowFlags(mainWindow.windowFlags() |
                           QtCore.Qt.WindowSystemMenuHint |
                           QtCore.Qt.WindowMinMaxButtonsHint)
 
-    GUI = MyGui(dialog)
-    dialog.show()
+    GUI = MyGui(mainWindow)
+    mainWindow.show()
 
     myMC = myMainClass()
 
