@@ -1,6 +1,8 @@
 from pyHook import HookManager
 from win32gui import PumpMessages, PostQuitMessage
 
+
+
 class Keystroke_Watcher(object):
     def __init__(self):
         self.hm = HookManager()
@@ -13,7 +15,8 @@ class Keystroke_Watcher(object):
             key = event.KeyID
             if key == 81:
                 self.shutdown()
-            elif event.K
+            else:
+                print(key)
         finally:
             return True
 
