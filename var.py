@@ -1,5 +1,6 @@
 runStatus = False
 terminate = False
+quitingStatus = False
 stop = True
 data = list()
 

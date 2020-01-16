@@ -2,13 +2,12 @@ from gui import Ui_MainWindow
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QFileDialog
 import sys
-import clipboard
 import os
 import var
-import time
-
-#import var
-import threading
+from time import sleep
+import keystroke
+from pynput.keyboard import Key, Controller
+from threading import Thread
 
 
 class MyGui(Ui_MainWindow, QtWidgets.QWidget):
@@ -26,18 +25,27 @@ class myMainClass():
 
         self.prevR = 100
         self.prevC = 100
+        self.keyboard = Controller()
+
 
         GUI.pushButton_start.clicked.connect(self.start)
         GUI.pushButton_stop.clicked.connect(self.stop)
         GUI.pushButton_generate.clicked.connect(self.generate)
+        GUI.aboutToQuit.connect(self.closeEvent)
 
     def start(self):
+        var.quitingStatus = False
         var.runStatus = True
-        clipboard.copy(0, "thread-0").start()
-        pass
+        # Thread(target=keystroke.main(), daemon=True).start()
+        keystroke.main()
+
     def stop(self):
+        self.keyboard.press('q')
         var.runStatus = False
-        print("stopping")
+    def closeEvent(self):
+        self.keyboard.press('q')
+        print("here1")
+
     def generate(self):
         pass
 
@@ -57,7 +65,7 @@ if __name__ == '__main__':
 
     app = QtWidgets.QApplication(sys.argv)
     mainWindow = QtWidgets.QMainWindow()
-
+    keyboard = Controller()
     try:
         def resource_path(relative_path):
             if hasattr(sys, '_MEIPASS'):
@@ -82,7 +90,8 @@ if __name__ == '__main__':
     myMC = myMainClass()
 
     app.exec_()
-    var.runStatus = False
-    time.sleep(3)
+    print("quiting")
+    var.quitingStatus = True
+    sleep(2)
     print("Exit")
     sys.exit()
