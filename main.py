@@ -1,15 +1,16 @@
 from gui import Ui_MainWindow
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtWidgets import QFileDialog, QTableWidgetItem
 import sys
 import os
 import var
+import calTablePos
 from time import sleep
 import keystroke
 from pynput.keyboard import Key, Controller
 from threading import Thread
 
-
+global app
 class MyGui(Ui_MainWindow, QtWidgets.QWidget):
     def __init__(self, mainWindow):
         Ui_MainWindow.__init__(self)
@@ -23,46 +24,74 @@ class myMainClass():
         self.timer.timeout.connect(self.tableRow)
         self.timer.start(10)
 
+        self.timer1 = QtCore.QTimer()
+        self.timer1.timeout.connect(self.dataPaste)
+        self.timer1.start(100)
+
+
         self.prevR = 100
-        self.prevC = 100
+        self.prevC = 5
+        var.prevR = int(self.prevR)
+        var.prevC = int(self.prevC)
+        GUI.tableWidget.setCurrentCell(var.tableRowPos, var.tableColPos)
+        self.preTabPos = [var.tableRowPos, var.tableColPos]
+        GUI.rowNumber.setText(str(self.prevR))
+        GUI.columnNumber.setText(str(self.prevC))
         self.keyboard = Controller()
 
 
         GUI.pushButton_start.clicked.connect(self.start)
         GUI.pushButton_stop.clicked.connect(self.stop)
         GUI.pushButton_generate.clicked.connect(self.generate)
-        GUI.aboutToQuit.connect(self.closeEvent)
 
     def start(self):
         var.quitingStatus = False
         var.runStatus = True
-        # Thread(target=keystroke.main(), daemon=True).start()
-        keystroke.main()
+        Thread(target=keystroke.main()).start()
 
     def stop(self):
+        print("Stopping")
         self.keyboard.press('q')
-        var.runStatus = False
+        # var.runStatus = False
     def closeEvent(self):
+        print("Close Event")
         self.keyboard.press('q')
-        print("here1")
 
     def generate(self):
         pass
 
+    def dataPaste(self):
+        try:
+            if not var.cText.empty():
+                data = var.cText.get()
+                GUI.tableWidget.setItem(data[1][0],data[1][1], QTableWidgetItem(str(data[0])))
+        except Exception as e:
+            print(e)
+
     def tableRow(self):
+        if var.tableRowPos != self.preTabPos[0] or var.tableColPos != self.preTabPos[1]:
+            GUI.tableWidget.clearSelection()
+            GUI.tableWidget.setCurrentCell(var.tableRowPos, var.tableColPos)
+            self.preTabPos[0] = var.tableRowPos
+            self.preTabPos[1] = var.tableColPos
+
+
         row = GUI.rowNumber.text()
         column = GUI.columnNumber.text()
+
+
         if self.prevR != row and row.isnumeric() == True and row != '':
-            self.prevR = row
+            self.prevR = var.prevR = int(row)
             GUI.tableWidget.setRowCount(int(row))
 
         if self.prevC != column and column.isnumeric() == True and column != '':
-            self.prevC = column
+            self.prevC = var.prevC = int(column)
             GUI.tableWidget.setColumnCount(int(column))
 
 
 if __name__ == '__main__':
 
+    global app
     app = QtWidgets.QApplication(sys.argv)
     mainWindow = QtWidgets.QMainWindow()
     keyboard = Controller()
@@ -90,8 +119,5 @@ if __name__ == '__main__':
     myMC = myMainClass()
 
     app.exec_()
-    print("quiting")
-    var.quitingStatus = True
-    sleep(2)
     print("Exit")
     sys.exit()

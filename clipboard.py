@@ -7,11 +7,14 @@ class copy(object):
         pass
     def copyClipboard(self):
         try:
-            print(Tk().clipboard_get())
+            temp = Tk().clipboard_get()
+            return temp
         except Exception as e:
             print(e)
         finally:
             pass
+    def clear(self):
+        Tk().clipboard_clear()
 
 if __name__ == '__main__':
     copyAction = copy()
