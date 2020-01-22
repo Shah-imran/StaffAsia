@@ -43,10 +43,18 @@ class myMainClass():
         GUI.pushButton_start.clicked.connect(self.start)
         GUI.pushButton_stop.clicked.connect(self.stop)
         GUI.pushButton_generate.clicked.connect(self.generate)
+        GUI.tableWidget.cellClicked.connect(self.updateCo)
+
+    def updateCo(self):
+        print("cell Clicked")
+        var.tableRowPos = GUI.tableWidget.currentRow()
+        var.tableColPos = GUI.tableWidget.currentColumn()
 
     def start(self):
         var.quitingStatus = False
         var.runStatus = True
+        var.tableRowPos = 1
+        var.tableColPos = 0
         Thread(target=keystroke.main()).start()
 
     def stop(self):
@@ -74,7 +82,6 @@ class myMainClass():
             GUI.tableWidget.setCurrentCell(var.tableRowPos, var.tableColPos)
             self.preTabPos[0] = var.tableRowPos
             self.preTabPos[1] = var.tableColPos
-
 
         row = GUI.rowNumber.text()
         column = GUI.columnNumber.text()

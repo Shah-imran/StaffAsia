@@ -29,11 +29,30 @@ class Keystroke_Watcher(object):
                 temp = self.copy.copyClipboard()
                 print("ctrl + c - copy -" + temp )
                 var.cText.put([temp, (var.tableRowPos, var.tableColPos)])
+                if var.tableRowPos == (var.prevR - 1) and var.tableColPos == (var.prevC - 1):
+                    pass
+                elif var.tableColPos == (var.prevC - 1):
+                    var.tableColPos = 0
+                    var.tableRowPos += 1
+                else:
+                    var.tableColPos += 1
+
             elif GetKeyState(HookConstants.VKeyToID('VK_CONTROL')) and event.KeyID == 90:
+                if var.tableRowPos == 0 and var.tableColPos == 0:
+                    pass
+                elif var.tableColPos == 0:
+                    var.tableColPos = var.prevC - 1
+                    var.tableRowPos -= 1
+                else:
+                    var.tableColPos -= 1
+                var.cText.put(["", (var.tableRowPos, var.tableColPos)])
                 print("ctrl + z - revert")
             elif GetKeyState(HookConstants.VKeyToID('VK_CONTROL')) and event.KeyID == 82:
+                var.cText.put(["", (var.tableRowPos, var.tableColPos)])
                 print("ctrl + r - remove")
             elif GetKeyState(HookConstants.VKeyToID('VK_CONTROL')) and event.KeyID == 78:
+                var.tableColPos = 0
+                var.tableRowPos += 1
                 print("ctrl + r - new line")
             elif GetKeyState(HookConstants.VKeyToID('VK_CONTROL')) and event.KeyID == 38:
                 if var.tableRowPos > 0:
