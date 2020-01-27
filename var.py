@@ -9,6 +9,7 @@ tableRowPos = 1
 tableColPos = 0
 prevR = 0
 prevC = 0
+preTabPos = []
 data = list()
 cText = Queue()
 stack = deque()

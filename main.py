@@ -1,6 +1,7 @@
 from gui import Ui_MainWindow
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QFileDialog, QTableWidgetItem
+from PyQt5.QtWidgets import QFileDialog, QTableWidgetItem, QMessageBox
+import dialog
 import sys
 import os
 import var
@@ -9,6 +10,7 @@ from time import sleep
 import keystroke
 from pynput.keyboard import Key, Controller
 from threading import Thread
+import csv
 
 global app
 class MyGui(Ui_MainWindow, QtWidgets.QWidget):
@@ -24,17 +26,18 @@ class myMainClass():
         self.timer.timeout.connect(self.tableRow)
         self.timer.start(10)
 
-        self.timer1 = QtCore.QTimer()
-        self.timer1.timeout.connect(self.dataPaste)
-        self.timer1.start(100)
+        # self.timer1 = QtCore.QTimer()
+        # self.timer1.timeout.connect(self.dataPaste)
+        # self.timer1.start(100)
+        var.tableRowPos = 1
+        var.tableColPos = 0
 
-
-        self.prevR = 100
+        self.prevR = 5
         self.prevC = 5
         var.prevR = int(self.prevR)
         var.prevC = int(self.prevC)
         GUI.tableWidget.setCurrentCell(var.tableRowPos, var.tableColPos)
-        self.preTabPos = [var.tableRowPos, var.tableColPos]
+        var.preTabPos = [var.tableRowPos, var.tableColPos]
         GUI.rowNumber.setText(str(self.prevR))
         GUI.columnNumber.setText(str(self.prevC))
         self.keyboard = Controller()
@@ -42,8 +45,17 @@ class myMainClass():
 
         GUI.pushButton_start.clicked.connect(self.start)
         GUI.pushButton_stop.clicked.connect(self.stop)
-        GUI.pushButton_generate.clicked.connect(self.generate)
+        GUI.pushButton_generate.clicked.connect(self.interMgenerate)
         GUI.tableWidget.cellClicked.connect(self.updateCo)
+        GUI.tableWidget.itemChanged.connect(self.remove)
+        GUI.rowNumber.mouseReleaseEvent = (self.onPressed)
+        GUI.columnNumber.mouseReleaseEvent = (self.onPressed)
+
+    def onPressed(self, event):
+        print("warning")
+        answer = dialog.main()
+        print(answer)
+
 
     def updateCo(self):
         print("cell Clicked")
@@ -53,9 +65,8 @@ class myMainClass():
     def start(self):
         var.quitingStatus = False
         var.runStatus = True
-        var.tableRowPos = 1
-        var.tableColPos = 0
         Thread(target=keystroke.main()).start()
+        Thread(target=dataPaste, daemon=True).start()
 
     def stop(self):
         print("Stopping")
@@ -65,27 +76,17 @@ class myMainClass():
         print("Close Event")
         self.keyboard.press('q')
 
-    def generate(self):
-        pass
+    def remove(self):
+        print("cellChanged")
+        GUI.tableWidget.clearSelection()
+        GUI.tableWidget.setCurrentCell(var.tableRowPos, var.tableColPos)
 
-    def dataPaste(self):
-        try:
-            if not var.cText.empty():
-                data = var.cText.get()
-                GUI.tableWidget.setItem(data[1][0],data[1][1], QTableWidgetItem(str(data[0])))
-        except Exception as e:
-            print(e)
+    def interMgenerate(self):
+        Thread(target=generate, daemon=True).start()
 
     def tableRow(self):
-        if var.tableRowPos != self.preTabPos[0] or var.tableColPos != self.preTabPos[1]:
-            GUI.tableWidget.clearSelection()
-            GUI.tableWidget.setCurrentCell(var.tableRowPos, var.tableColPos)
-            self.preTabPos[0] = var.tableRowPos
-            self.preTabPos[1] = var.tableColPos
-
         row = GUI.rowNumber.text()
         column = GUI.columnNumber.text()
-
 
         if self.prevR != row and row.isnumeric() == True and row != '':
             self.prevR = var.prevR = int(row)
@@ -94,6 +95,42 @@ class myMainClass():
         if self.prevC != column and column.isnumeric() == True and column != '':
             self.prevC = var.prevC = int(column)
             GUI.tableWidget.setColumnCount(int(column))
+
+def dataPaste():
+    while True:
+        try:
+            if not var.cText.empty():
+                data = var.cText.get()
+                GUI.tableWidget.clearSelection()
+                GUI.tableWidget.setCurrentCell(data[1][0],data[1][1])
+                GUI.tableWidget.setItem(data[1][0],data[1][1], QTableWidgetItem(str(data[0])))
+        except Exception as e:
+            print(e)
+
+        if var.tableRowPos != var.preTabPos[0] or var.tableColPos != var.preTabPos[1]:
+            GUI.tableWidget.clearSelection()
+            GUI.tableWidget.setCurrentCell(var.tableRowPos, var.tableColPos)
+            var.preTabPos[0] = var.tableRowPos
+            var.preTabPos[1] = var.tableColPos
+
+def generate():
+    data = list()
+    for row in range(0, var.prevR):
+        temp = list()
+        for col in range(0, var.prevR):
+            try:
+                item = GUI.tableWidget.item(row, col)
+                print(item.text())
+                temp.append(item.text())
+            except:
+                temp.append("")
+
+        data.append(temp)
+    with open("out.csv", "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerows(data)
+    print(data)
+
 
 
 if __name__ == '__main__':

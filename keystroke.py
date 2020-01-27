@@ -48,7 +48,10 @@ class Keystroke_Watcher(object):
                 var.cText.put(["", (var.tableRowPos, var.tableColPos)])
                 print("ctrl + z - revert")
             elif GetKeyState(HookConstants.VKeyToID('VK_CONTROL')) and event.KeyID == 82:
-                var.cText.put(["", (var.tableRowPos, var.tableColPos)])
+                var.cText.put([" ", (var.tableRowPos, var.tableColPos)])
+                var.tableRowPos += 1
+                sleep(0.01)
+                var.tableRowPos -= 1
                 print("ctrl + r - remove")
             elif GetKeyState(HookConstants.VKeyToID('VK_CONTROL')) and event.KeyID == 78:
                 var.tableColPos = 0
@@ -76,6 +79,8 @@ class Keystroke_Watcher(object):
                 print(var.tableRowPos, var.tableColPos)
             else:
                 pass
+        except Exception as e:
+            print(e)
         finally:
             return True
 
@@ -86,10 +91,13 @@ class Keystroke_Watcher(object):
 
 
 def main():
-    watcher = Keystroke_Watcher()
-    # PumpMessages()
-    PumpWaitingMessages()
-    # Thread(target=calTablePos.main, args=(GUI, ), daemon=True).start()
+    try:
+        watcher = Keystroke_Watcher()
+        # PumpMessages()
+        PumpWaitingMessages()
+        # Thread(target=calTablePos.main, args=(GUI, ), daemon=True).start()
+    except Exception as e:
+        print(e)
 
 if __name__ == '__main__':
     # watcher = Keystroke_Watcher()
