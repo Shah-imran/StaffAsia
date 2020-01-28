@@ -88,6 +88,7 @@ class Keystroke_Watcher(object):
         # PostQuitMessage(0)
         self.hm.UnhookKeyboard()
         print("shutdown after pressing q")
+        var.runStatus = False
 
 
 def main():

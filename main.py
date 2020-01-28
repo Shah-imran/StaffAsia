@@ -8,9 +8,10 @@ import var
 import calTablePos
 from time import sleep
 import keystroke
-from pynput.keyboard import Key, Controller
+# from pynput.keyboard import Key, Controller
 from threading import Thread
 import csv
+import pyautogui
 
 global app
 class MyGui(Ui_MainWindow, QtWidgets.QWidget):
@@ -22,9 +23,9 @@ class MyGui(Ui_MainWindow, QtWidgets.QWidget):
 
 class myMainClass():
     def __init__(self):
-        self.timer = QtCore.QTimer()
-        self.timer.timeout.connect(self.tableRow)
-        self.timer.start(10)
+        # self.timer = QtCore.QTimer()
+        # self.timer.timeout.connect(self.tableRow)
+        # self.timer.start(10)
 
         # self.timer1 = QtCore.QTimer()
         # self.timer1.timeout.connect(self.dataPaste)
@@ -32,15 +33,15 @@ class myMainClass():
         var.tableRowPos = 1
         var.tableColPos = 0
 
-        self.prevR = 5
-        self.prevC = 5
+        self.prevR = GUI.rowNumber.text()
+        self.prevC = GUI.columnNumber.text()
         var.prevR = int(self.prevR)
         var.prevC = int(self.prevC)
         GUI.tableWidget.setCurrentCell(var.tableRowPos, var.tableColPos)
         var.preTabPos = [var.tableRowPos, var.tableColPos]
-        GUI.rowNumber.setText(str(self.prevR))
-        GUI.columnNumber.setText(str(self.prevC))
-        self.keyboard = Controller()
+        # GUI.rowNumber.setText(str(self.prevR))
+        # GUI.columnNumber.setText(str(self.prevC))
+        # self.keyboard = Controller()
 
 
         GUI.pushButton_start.clicked.connect(self.start)
@@ -50,11 +51,23 @@ class myMainClass():
         GUI.tableWidget.itemChanged.connect(self.remove)
         GUI.rowNumber.mouseReleaseEvent = (self.onPressed)
         GUI.columnNumber.mouseReleaseEvent = (self.onPressed)
+        # GUI.columnNumber.textChanged.connect(self.onPressed)
+        # GUI.rowNumber.textChanged.connect(self.onPressed)
+        self.answer = 0
 
     def onPressed(self, event):
         print("warning")
-        answer = dialog.main()
-        print(answer)
+        self.answer = dialog.main()
+        print(self.answer)
+        if self.answer == 1:
+            GUI.pushButton_start.setDisabled(False)
+            pyautogui.keyDown("ctrl")
+            pyautogui.press("q")
+            pyautogui.keyUp("ctrl")
+        else:
+            GUI.rowNumber.setText(str(self.prevR))
+            GUI.columnNumber.setText(str(self.prevC))
+            # GUI.pushButton_start.setDisabled(True)
 
 
     def updateCo(self):
@@ -63,18 +76,42 @@ class myMainClass():
         var.tableColPos = GUI.tableWidget.currentColumn()
 
     def start(self):
-        var.quitingStatus = False
         var.runStatus = True
         Thread(target=keystroke.main()).start()
         Thread(target=dataPaste, daemon=True).start()
+        if self.answer == 1:
+            row = GUI.rowNumber.text()
+            column = GUI.columnNumber.text()
+
+            if self.prevR != row and row.isnumeric() == True and row != '':
+                self.prevR = var.prevR = int(row)
+                GUI.tableWidget.setRowCount(int(row))
+
+            if self.prevC != column and column.isnumeric() == True and column != '':
+                self.prevC = var.prevC = int(column)
+                GUI.tableWidget.setColumnCount(int(column))
+            self.answer = 0
+        else:
+            GUI.rowNumber.setText(str(self.prevR))
+            GUI.columnNumber.setText(str(self.prevC))
+
+        GUI.pushButton_start.setDisabled(True)
 
     def stop(self):
         print("Stopping")
-        self.keyboard.press('q')
-        # var.runStatus = False
+        GUI.pushButton_start.setDisabled(False)
+        pyautogui.keyDown("ctrl")
+        pyautogui.press("q")
+        pyautogui.keyUp("ctrl")
+        var.runStatus = False
     def closeEvent(self):
         print("Close Event")
-        self.keyboard.press('q')
+        GUI.pushButton_start.setDisabled(False)
+        pyautogui.keyDown("ctrl")
+        pyautogui.press("q")
+        pyautogui.keyUp("ctrl")
+        var.runStatus = False
+        # self.keyboard.press('q')
 
     def remove(self):
         print("cellChanged")
@@ -91,13 +128,15 @@ class myMainClass():
         if self.prevR != row and row.isnumeric() == True and row != '':
             self.prevR = var.prevR = int(row)
             GUI.tableWidget.setRowCount(int(row))
+            self.answer = 0
 
         if self.prevC != column and column.isnumeric() == True and column != '':
             self.prevC = var.prevC = int(column)
             GUI.tableWidget.setColumnCount(int(column))
+            self.answer = 0
 
 def dataPaste():
-    while True:
+    while var.runStatus!=False:
         try:
             if not var.cText.empty():
                 data = var.cText.get()
@@ -138,7 +177,7 @@ if __name__ == '__main__':
     global app
     app = QtWidgets.QApplication(sys.argv)
     mainWindow = QtWidgets.QMainWindow()
-    keyboard = Controller()
+    # keyboard = Controller()
     try:
         def resource_path(relative_path):
             if hasattr(sys, '_MEIPASS'):

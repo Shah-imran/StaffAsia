@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'gui1.ui'
+# Form implementation generated from reading ui file 'gui.ui'
 #
 # Created by: PyQt5 UI code generator 5.13.0
 #
@@ -54,7 +54,7 @@ class Ui_MainWindow(object):
         self.column.setAutoFillBackground(False)
         self.column.setStyleSheet("font: 20pt \"Times New Roman\";\n"
 "color:  #0C3B40;\n"
-"background-color: #c0ffb3;\n"
+"background-color: #63b7af;\n"
 "")
         self.column.setObjectName("column")
         self.tab_1 = QtWidgets.QWidget()
@@ -62,9 +62,16 @@ class Ui_MainWindow(object):
         self.gridLayout_3 = QtWidgets.QGridLayout(self.tab_1)
         self.gridLayout_3.setObjectName("gridLayout_3")
         self.label = QtWidgets.QLabel(self.tab_1)
+        font = QtGui.QFont()
+        font.setFamily("Times New Roman")
+        font.setPointSize(20)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
+        self.label.setFont(font)
         self.label.setStyleSheet("font: 20pt \"Times New Roman\";\n"
 "color:  #0C3B40;\n"
-"background-color: #c0ffb3;\n"
+"\n"
 "")
         self.label.setObjectName("label")
         self.gridLayout_3.addWidget(self.label, 2, 0, 1, 1)
@@ -74,8 +81,8 @@ class Ui_MainWindow(object):
         self.gridLayout_3.addWidget(self.columnNumber, 2, 1, 1, 1)
         self.tableWidget = QtWidgets.QTableWidget(self.tab_1)
         self.tableWidget.setStyleSheet(" background-color: #e1f5fe;")
-        self.tableWidget.setRowCount(100)
-        self.tableWidget.setColumnCount(100)
+        self.tableWidget.setRowCount(1000)
+        self.tableWidget.setColumnCount(7)
         self.tableWidget.setObjectName("tableWidget")
         self.gridLayout_3.addWidget(self.tableWidget, 4, 0, 1, 4)
         self.pushButton_start = QtWidgets.QPushButton(self.tab_1)
@@ -83,7 +90,16 @@ class Ui_MainWindow(object):
         self.pushButton_start.setObjectName("pushButton_start")
         self.gridLayout_3.addWidget(self.pushButton_start, 2, 2, 1, 1)
         self.label_2 = QtWidgets.QLabel(self.tab_1)
-        self.label_2.setStyleSheet("color:  #ff5d6c;")
+        font = QtGui.QFont()
+        font.setFamily("Times New Roman")
+        font.setPointSize(20)
+        font.setBold(True)
+        font.setItalic(False)
+        font.setUnderline(False)
+        font.setWeight(75)
+        font.setKerning(False)
+        self.label_2.setFont(font)
+        self.label_2.setStyleSheet("font-weight: bold;")
         self.label_2.setAlignment(QtCore.Qt.AlignCenter)
         self.label_2.setObjectName("label_2")
         self.gridLayout_3.addWidget(self.label_2, 6, 0, 1, 4)
@@ -98,7 +114,7 @@ class Ui_MainWindow(object):
         self.label_3 = QtWidgets.QLabel(self.tab_1)
         self.label_3.setStyleSheet("font: 20pt \"Times New Roman\";\n"
 "color:  #0C3B40;\n"
-"background-color: #c0ffb3;\n"
+"\n"
 "")
         self.label_3.setAlignment(QtCore.Qt.AlignCenter)
         self.label_3.setObjectName("label_3")
@@ -126,9 +142,11 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.softwareName.setText(_translate("MainWindow", "Staff Asia"))
         self.label.setText(_translate("MainWindow", "Column Number"))
+        self.columnNumber.setText(_translate("MainWindow", "7"))
         self.pushButton_start.setText(_translate("MainWindow", "Start"))
-        self.label_2.setText(_translate("MainWindow", "Press Start"))
+        self.label_2.setText(_translate("MainWindow", "First Put the column names then press Start button to start copy assisting!"))
         self.pushButton_generate.setText(_translate("MainWindow", "Generate Output"))
+        self.rowNumber.setText(_translate("MainWindow", "1000"))
         self.label_3.setText(_translate("MainWindow", "Row Number"))
         self.pushButton_stop.setText(_translate("MainWindow", "Stop"))
         self.column.setTabText(self.column.indexOf(self.tab_1), _translate("MainWindow", "CopyAssist"))
