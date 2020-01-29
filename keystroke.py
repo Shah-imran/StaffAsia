@@ -80,7 +80,7 @@ class Keystroke_Watcher(object):
             else:
                 pass
         except Exception as e:
-            print(e)
+            print("Error in the copy class - ",e)
         finally:
             return True
 
@@ -98,7 +98,7 @@ def main():
         PumpWaitingMessages()
         # Thread(target=calTablePos.main, args=(GUI, ), daemon=True).start()
     except Exception as e:
-        print(e)
+        print("Error while copying data - ",e)
 
 if __name__ == '__main__':
     # watcher = Keystroke_Watcher()

@@ -59,15 +59,19 @@ class myMainClass():
         print("warning")
         self.answer = dialog.main()
         print(self.answer)
+        GUI.label_2.setText("Stopped. Press Start...")
         if self.answer == 1:
             GUI.pushButton_start.setDisabled(False)
             pyautogui.keyDown("ctrl")
             pyautogui.press("q")
             pyautogui.keyUp("ctrl")
         else:
+            pyautogui.keyDown("ctrl")
+            pyautogui.press("q")
+            pyautogui.keyUp("ctrl")
             GUI.rowNumber.setText(str(self.prevR))
             GUI.columnNumber.setText(str(self.prevC))
-            # GUI.pushButton_start.setDisabled(True)
+            GUI.pushButton_start.setDisabled(False)
 
 
     def updateCo(self):
@@ -96,6 +100,7 @@ class myMainClass():
             GUI.columnNumber.setText(str(self.prevC))
 
         GUI.pushButton_start.setDisabled(True)
+        GUI.label_2.setText("Running...")
 
     def stop(self):
         print("Stopping")
@@ -151,24 +156,35 @@ def dataPaste():
             GUI.tableWidget.setCurrentCell(var.tableRowPos, var.tableColPos)
             var.preTabPos[0] = var.tableRowPos
             var.preTabPos[1] = var.tableColPos
+    else:
+        print("getting out of loop")
+        GUI.label_2.setText("Stopped...")
 
 def generate():
-    data = list()
-    for row in range(0, var.prevR):
-        temp = list()
-        for col in range(0, var.prevR):
-            try:
-                item = GUI.tableWidget.item(row, col)
-                print(item.text())
-                temp.append(item.text())
-            except:
-                temp.append("")
+    try:
+        GUI.label_2.setText("Generating Csv...")
+        GUI.pushButton_generate.setDisabled(True)
+        data = list()
+        for row in range(0, var.prevR):
+            temp = list()
+            for col in range(0, var.prevR):
+                try:
+                    item = GUI.tableWidget.item(row, col)
+                    print(item.text())
+                    temp.append(item.text())
+                except:
+                    temp.append("")
 
-        data.append(temp)
-    with open("out.csv", "w", newline="") as f:
-        writer = csv.writer(f)
-        writer.writerows(data)
-    print(data)
+            data.append(temp)
+        with open("out.csv", "w", newline="") as f:
+            writer = csv.writer(f)
+            writer.writerows(data)
+        print(data)
+        GUI.label_2.setText("Generating Csv... Done")
+    except Exception as e:
+        print("Error while saving the file - ", e )
+    finally:
+        GUI.pushButton_generate.setDisabled(True)
 
 
 
