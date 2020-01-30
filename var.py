@@ -10,6 +10,7 @@ tableColPos = 0
 prevR = 0
 prevC = 0
 preTabPos = []
+csvPath = "out.csv"
 data = list()
 cText = Queue()
 stack = deque()

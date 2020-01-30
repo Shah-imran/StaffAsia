@@ -5,7 +5,7 @@ import dialog
 import sys
 import os
 import var
-import calTablePos
+# import calTablePos
 from time import sleep
 import keystroke
 # from pynput.keyboard import Key, Controller
@@ -124,7 +124,15 @@ class myMainClass():
         GUI.tableWidget.setCurrentCell(var.tableRowPos, var.tableColPos)
 
     def interMgenerate(self):
-        Thread(target=generate, daemon=True).start()
+        csvPath = "out.csv"
+        options = QFileDialog.Options()
+        options |= QFileDialog.DontUseNativeDialog
+        csvPath, _ = QFileDialog.getSaveFileName(None,"File saving window","","csv files (*.csv)", options=options)
+        if csvPath:
+            var.csvPath = csvPath
+            Thread(target=generate, daemon=True).start()
+        else:
+            GUI.label_2.setText("Give a Name...")
 
     def tableRow(self):
         row = GUI.rowNumber.text()
@@ -176,7 +184,7 @@ def generate():
                     temp.append("")
 
             data.append(temp)
-        with open("out.csv", "w", newline="") as f:
+        with open(var.csvPath, "w", newline="") as f:
             writer = csv.writer(f)
             writer.writerows(data)
         print(data)
@@ -184,7 +192,7 @@ def generate():
     except Exception as e:
         print("Error while saving the file - ", e )
     finally:
-        GUI.pushButton_generate.setDisabled(True)
+        GUI.pushButton_generate.setDisabled(False)
 
 
 
